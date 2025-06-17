@@ -57,5 +57,52 @@ fiscore = f1_score(y_test, y_pred, average="macro")
 # print(fiscore)
 
 classification_rep = classification_report(y_test, y_pred)
-print(classification_rep, sep="\n")
+# print(classification_rep, sep="\n")
 
+pipeline = Pipeline(steps=[("Scaler", scaler),("model", model)])
+pipeline.fit(x_train, y_train)
+
+y_pred = pipeline.predict(x_test)
+print(y_pred)
+
+# FETAURE SELACTION
+
+feature_selection = SelectKBest(score_func=f_classif, k=6)
+
+feature_selection.fit(x_train, y_train)
+feature_selection.get_feature_names_out()
+
+feature_selection.scores_
+
+f1_scr, acc_src, pre_scr, rec_scr = ([] for lst in range(0,4))
+for i in range(1, len(x.columns)+1):
+    feature_selection = SelectKBest(score_func=f_classif, k=i)
+    pipeline = Pipeline(steps=[("Scaler", scaler), ("feature_selection", feature_selection), ("model", model)])
+    pipeline.fit(x_train, y_train)
+    y_pred = pipeline.predict(x_test)
+
+    # print("Accuracy Score (k={}): {}".format(i, accuracy_score(y_test, y_pred)))
+    # print("Precision Score (k={}): {}".format(i, precision_score(y_test, y_pred, average="macro")))
+    # print("Recall Score (k={}): {}".format(i, recall_score(y_test, y_pred, average="macro")))
+    # print("F1 Score (k={}): {}".format(i, f1_score(y_test, y_pred, average="macro")))
+
+
+mask = pipeline["feature_selection"].get_support()
+print(mask)
+
+selected_features = x_train.columns[mask]
+print("Selected Features:", selected_features)
+
+# Visualizing the selected features
+plt.figure(figsize=(10, 6))
+sns.barplot(x=selected_features, y=pipeline["feature_selection"].scores_[mask])
+plt.title("Selected Features Scores")
+plt.xlabel("Features")
+plt.ylabel("Scores")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+selected_features_df = pd.DataFrame({"Features": selected_features, "Scores": pipeline["feature_selection"].scores_[mask]})
+selected_features_df.sort_values(by="Scores", ascending=False, inplace=True)
+print(selected_features_df)
