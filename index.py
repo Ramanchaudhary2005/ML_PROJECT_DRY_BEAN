@@ -4,6 +4,11 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from numpy import median
 
+def save_plot(filename):
+    plt.tight_layout()
+    plt.savefig(filename)
+    plt.close()
+
 # Load data
 bean_data = pd.read_csv("Dry_Bean_Dataset.csv")
 
@@ -24,40 +29,36 @@ plt.title("Count of Each Bean Class")
 plt.xlabel("Bean Class")
 plt.ylabel("Count")
 plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
+save_plot("count_of_each_bean_class.png")
 
-# Bar Plot of class and area of bean data
+# Median Area by Class
 plt.figure(figsize=[12, 8])
 sns.barplot(x="Class", y="Area", data=bean_data, estimator=median, palette="coolwarm")
 plt.title("Median Area by Bean Class")
 plt.xlabel("Bean Class")
 plt.ylabel("Median Area")
 plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
+save_plot("median_area_by_class.png")
 
-# Bar Plot of class and eccentricity of bean data
+# Median Eccentricity
 plt.figure(figsize=[12, 8])
 sns.barplot(x="Class", y="Eccentricity", data=bean_data, estimator=median, palette="coolwarm")
 plt.title("Median Eccentricity by Bean Class")
 plt.xlabel("Bean Class")
 plt.ylabel("Median Eccentricity")
 plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
+save_plot("median_eccentricity_by_class.png")
 
-# Bar Plot of class and Compactness of bean data
+# Median Compactness
 plt.figure(figsize=[12, 8])
 sns.barplot(x="Class", y="Compactness", data=bean_data, estimator=median, palette="coolwarm")
 plt.title("Median Compactness by Bean Class")
 plt.xlabel("Bean Class")
 plt.ylabel("Median Compactness")
 plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
+save_plot("median_compactness_by_class.png")
 
-# Distribution plots for selected features
+# Distribution Plots
 features1 = ["Area", "Perimeter", "MajorAxisLength", "MinorAxisLength", "AspectRation", "Eccentricity"]
 fig, axes = plt.subplots(len(features1), 1, figsize=[12, 14])
 for i, feature in enumerate(features1):
@@ -65,8 +66,7 @@ for i, feature in enumerate(features1):
     axes[i].set_title(f"Distribution of {feature}")
     axes[i].set_xlabel(feature)
     axes[i].set_ylabel("Frequency")
-plt.tight_layout()
-plt.show()
+save_plot("distribution_features1.png")
 
 features2 = ["EquivDiameter", "Extent", "Solidity", "roundness", "Compactness", "ShapeFactor1"]
 fig, axes = plt.subplots(len(features2), 1, figsize=[12, 14])
@@ -75,49 +75,45 @@ for i, feature in enumerate(features2):
     axes[i].set_title(f"Distribution of {feature}")
     axes[i].set_xlabel(feature)
     axes[i].set_ylabel("Frequency")
-plt.tight_layout()
-plt.show()
+save_plot("distribution_features2.png")
 
-# Pairplot for numerical variables colored by class
+# Pairplot
 num_vars = ["Area", "Perimeter", "ConvexArea", "MajorAxisLength", "MinorAxisLength", "AspectRation", "Eccentricity"]
 sns.pairplot(bean_data[num_vars + ["Class"]], hue="Class", palette="coolwarm", diag_kind="kde")
 plt.suptitle("Pairplot of Numerical Features by Bean Class", y=1.02)
-plt.show()
+plt.savefig("pairplot_by_class.png")
+plt.close()
 
-# Correlation matrix and heatmap
+# Correlation Heatmap
 corr_mat = bean_data[num_vars].corr()
 plt.figure(figsize=[10, 8])
 sns.heatmap(corr_mat, annot=True, cmap="coolwarm", fmt=".2f")
 plt.title("Correlation Matrix of Numerical Features")
-plt.tight_layout()
-plt.show()
+save_plot("correlation_matrix.png")
 
-# Boxplot for numerical variables
+# Boxplot
 plt.figure(figsize=[14, 8])
 sns.boxplot(data=bean_data[num_vars], palette="coolwarm")
 plt.title("Boxplot of Numerical Features")
 plt.xlabel("Feature")
 plt.ylabel("Value")
 plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
+save_plot("boxplot_numerical_features.png")
 
-# New: Violin plot for Area by Class
+# Violin Plot
 plt.figure(figsize=[12, 8])
 sns.violinplot(x="Class", y="Area", data=bean_data, palette="coolwarm")
 plt.title("Distribution of Area by Bean Class")
 plt.xlabel("Bean Class")
 plt.ylabel("Area")
 plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
+save_plot("violinplot_area_by_class.png")
 
-# New: Swarm plot for Compactness by Class (for more detail)
+# Swarm Plot
 plt.figure(figsize=[12, 8])
 sns.swarmplot(x="Class", y="Compactness", data=bean_data, palette="coolwarm", size=2)
 plt.title("Compactness Distribution by Bean Class")
 plt.xlabel("Bean Class")
 plt.ylabel("Compactness")
 plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
+save_plot("swarmplot_compactness_by_class.png")
